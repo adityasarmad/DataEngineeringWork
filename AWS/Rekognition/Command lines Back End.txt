@@ -1,0 +1,12 @@
+#Script for the server
+sudo yum update -y
+curl --silent --location https://rpm.nodesource.com/setup_10.x | sudo bash -
+
+sudo yum -y install nodejs
+node -v
+npm install #Check the pasckage.json and install dependencies
+npm install aws-sdk
+npm install express
+npm install data-uri-to-buffer
+### copy the server.js and make the nessary changes to the file
+node server.js 
