@@ -1,0 +1,53 @@
+## need to have root user 
+
+yum -y groupinstall development
+yum -y install zlib-devel
+
+### get the Python 3.6
+wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
+tar xJf Python-3.6.3.tar.xz
+cd Python-3.6.3
+./configure
+make
+make install 
+### to check python use 
+which python3
+
+python3 -v
+
+
+## or use python3
+
+
+--------------------------------------------------------------------------------------------------
+0r use yum install for Python 3.6 
+
+sudo yum install python36
+python36
+
+pip3 install --upgrade pip3
+
+
+####getting keras 
+ sudo python36 -m pip install --upgrade --trusted-host pypi.org --trusted-host files.pythonhosted.org  keras
+ sudo python36 -m pip install --upgrade --trusted-host pypi.org --trusted-host files.pythonhosted.org  tensorflow
+ sudo python36 -m pip install --upgrade --trusted-host pypi.org --trusted-host files.pythonhosted.org  opencv-python
+ sudo python36 -m pip install --upgrade --trusted-host pypi.org --trusted-host files.pythonhosted.org  flask
+ sudo python36 -m pip install --upgrade --trusted-host pypi.org --trusted-host files.pythonhosted.org   scipy
+ sudo python36 -m pip install --upgrade --trusted-host pypi.org --trusted-host files.pythonhosted.org  pillow
+##Install jupiter 
+sudo python36 -m pip install --upgrade --trusted-host pypi.org --trusted-host files.pythonhosted.org  pip
+
+sudo python36 -m  pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org  jupyter
+
+
+which jupyter
+
+### to run the jupyter dont run as root
+/usr/local/bin/jupyter  notebook
+
+### we get the bind it with private ip 
+ /usr/local/bin/jupyter  notebook --ip 10.0.1.68
+
+
+####
