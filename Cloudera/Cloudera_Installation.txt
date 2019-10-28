@@ -1,0 +1,94 @@
+1-> check for the right hostname and connectivity 
+2 -> intiall open all ports in firewall or disable firewall
+3-> disable selinux before installation 
+    ]$ sestatus
+    This id for temporary disable of selinux
+    ]$ sudo setenforce 0
+    for permenant disable 
+    Open the /etc/selinux/config file and set the SELINUX mod to disabled:
+    ]$ restart 
+   test by see the output ofsestatus
+    ]$ sestatus
+
+=========================================
+https://unix.stackexchange.com/questions/265713/how-to-configure-swappiness-in-linux-memory-management
+        
+        open /etc/sysctl.conf as root. Then, change or add this line to the file:
+        vm.swappiness = 10
+
+https://www.shell-tips.com/2014/09/08/sudo-sorry-you-must-have-a-tty-to-run-sudo/
+
+   Replace Defaults requiretty by Defaults !requiretty in your /etc/sudoers  
+
+
+[root@ip-172-31-29-181 ec2-user]# echo never > /sys/kernel/mm/transparent_hugepage/defrag
+[root@ip-172-31-29-181 ec2-user]# echo never > /sys/kernel/mm/transparent_hugepage/enabled
+
+Add above two lines in /etc/rc.local
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+
+[root@ip-172-31-29-181 ec2-user]#
+
+
+install the package wget
+$ sudo yum install wget -y
+
+
+====================================================================================================================
+      URL   :-  https://www.cloudera.com/documentation/enterprise/5-7-x/topics/cm_qs_quick_start.html 
+====================================================================================================================
+4 -> -------------------------------------------------------------------------------------------------------------------------
+Download the installer:
+$ wget https://archive.cloudera.com/cm5/installer/latest/cloudera-manager-installer.bin
+Change cloudera-manager-installer.bin to have executable permission:
+$ chmod u+x cloudera-manager-installer.bin
+Run the Cloudera Manager Server installer by doing one of the following:
+Install Cloudera Manager packages from the Internet:
+$ sudo ./cloudera-manager-installer.bin
+Install Cloudera Manager packages from a local repository:
+$ sudo ./cloudera-manager-installer.bin --skip_repo_package=1
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+after restart please restart all service and also cluster manager services ("Management Services") if u see error in charts like "Charts error - Internal error while querying the Host Monitor "
+do redoply of stale connections 
+===================================================
+Restart procedure
+1. Hue
+2. Oozie
+3. Hive
+4. Spark
+5. Yarn
+6. HAdoop
+7. Zookeaper
+
+after installation add guid of hdfs,oozie,hue to a user 
+
+
+-----
+https://linuxconfig.org/installation-of-pip-the-python-packaging-tool-on-rhel-7-linux
+----
+
+
+Update Java to 1.8 
+follow 
+   https://www.cloudera.com/documentation/enterprise/upgrade/topics/ug_jdk8.html#concept_jkh_k4l_tdb
+
+Install Cloudera work bench (insted of ipython use this work bench )
+https://www.cloudera.com/documentation/spark2/latest/topics/spark2_installing.html
+https://www.cloudera.com/documentation/data-science-workbench/latest/topics/cdsw_install_parcel.html
+
+if we get any error with respect to docker 
+https://community.cloudera.com/t5/Support-Questions/CDSW-installation-Entries-in-DOCKER-BLOCK-DEVICES-must-only/td-p/80978
+
+spark2-submit --class org.apache.spark.examples.SparkPi --master yarn --deploy-mode client /opt/cloudera/parcels/SPARK2/lib/spark2/examples/jars/spark-example*.jar 100
+
+
+
+
+-------------------------------
+Increase memory of  'yarn.scheduler.maximum-allocation-mb' and/or 'yarn.nodemanager.resource.memory-mb' to above 4 GB in YARN configutations serach for these items and increase the meory 

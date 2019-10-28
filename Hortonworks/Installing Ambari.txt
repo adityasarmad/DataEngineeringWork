@@ -1,0 +1,199 @@
+~]$ sudo yum update -y
+
+~]$ sudo systemctl get-default
+multi-user.target
+~]$ sudo systemctl set-default multi-user.target
+Removed symlink /etc/systemd/system/default.target.
+Created symlink from /etc/systemd/system/default.target to /usr/lib/systemd/system/multi-user.target.
+~]$ sudo vi /etc/sysconfig/network
+~]$ sudo cat /etc/sysconfig/network
+# Created by cloud-init on instance boot automatically, do not edit.
+#
+NETWORKING=yes
+HOSTNAME=master1.hadoop.com
+~]$
+~]$ sudo systemctl status firewalld
+~]$ sudo systemctl disable firewalld
+~]$ sudo systemctl status firewalld
+### firewall is disabled 
+
+]# echo "vm.swappiness = 10" >> /etc/sysctl.conf
+[root@ip-172-31-26-153 ~]# cat /etc/sysctl.conf
+# sysctl settings are defined through files in
+# /usr/lib/sysctl.d/, /run/sysctl.d/, and /etc/sysctl.d/.
+#
+# Vendors settings live in /usr/lib/sysctl.d/.
+# To override a whole file, create a new file with the same in
+# /etc/sysctl.d/ and put new settings there. To override
+# only specific settings, add a file with a lexically later
+# name in /etc/sysctl.d/ and put new settings there.
+#
+# For more information, see sysctl.conf(5) and sysctl.d(5).
+vm.swappiness = 10
+[root@ip-172-31-26-153 ~]#
+
+ 
+~]# sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+
+~] grep "SELINUX" /etc/selinux/config
+
+~]# yum install wget ntp -y
+
+~]# systemctl enable ntpd
+
+~]# systemctl start  ntpd
+
+~]# systemctl status  ntpd
+● ntpd.service - Network Time Service
+   Loaded: loaded (/usr/lib/systemd/system/ntpd.service; enabled; vendor preset: disabled)
+   Active: active (running) since Fri 2019-10-25 12:27:08 UTC; 6s ago
+  Process: 9545 ExecStart=/usr/sbin/ntpd -u ntp:ntp $OPTIONS (code=exited, status=0/SUCCESS)
+ Main PID: 9546 (ntpd)
+   CGroup: /system.slice/ntpd.service
+           └─9546 /usr/sbin/ntpd -u ntp:ntp -g
+
+~]#
+
+ 
+~]# echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag " >> /etc/rc.local
+~]# echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled " >> /etc/rc.local
+~]# cat /etc/rc.local
+~]# echo umask 0022 >> /etc/profile
+
+~]# ifconfig
+~]# vi /etc/hosts
+~]# cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+172.31.26.153  master1.hadoop.com   master1
+
+
+~]$ hostnamectl status
+
+~]$ hostnamectl set-hostname  master1.hadoop.com
+
+~]$ hostnamectl status
+
+
+~]$ reboot 
+
+
+
+after reboot 
+
+~]# ifconfig
+~]# hostname
+~]# hostname -f
+~]# cat /etc/hosts
+~]# cd /etc/yum.repos.d
+yum.repos.d]# wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.3.0/ambari.repo
+
+
+yum.repos.d]# cat ambari.repo
+#VERSION_NUMBER=2.7.3.0-139
+[ambari-2.7.3.0]
+#json.url = http://public-repo-1.hortonworks.com/HDP/hdp_urlinfo.json
+name=ambari Version - ambari-2.7.3.0
+baseurl=http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.3.0
+gpgcheck=1
+gpgkey=http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.3.0/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+enabled=1
+priority=1
+
+[root@master1 yum.repos.d]#
+[root@master1 yum.repos.d]# yum update
+[root@master1 yum.repos.d]# yum install ambari-server ambari-agent -y
+
+#### this is for the the master 
+
+for all worker use hostname as worker1.hadoop.com so on and install only ambari-agent
+[root@master1 yum.repos.d]# yum install ambari-agent -y
+
+
+
+update the ambari server hostname in the ambari agent config files [in all master and worker linux machines ] 
+ 
+[root@master1 ~]# vi /etc/ambari-agent/conf/ambari-agent.ini
+
+
+
+in Master1 setup the ambari server 
+[root@master1 ~]# ambari-server setup
+
+=======================================================================================================================================================
+[root@master1 ~]# ambari-server setup
+Using python  /usr/bin/python
+Setup ambari-server
+Checking SELinux...
+SELinux status is 'disabled'
+Customize user account for ambari-server daemon [y/n] (n)? n
+Adjusting ambari-server permissions and ownership...
+Checking firewall status...
+Checking JDK...
+[1] Oracle JDK 1.8 + Java Cryptography Extension (JCE) Policy Files 8
+[2] Custom JDK
+==============================================================================
+Enter choice (1): 1
+To download the Oracle JDK and the Java Cryptography Extension (JCE) Policy Files you must accept the license terms found at http://www.oracle.com/technetwork/java/javase/terms/license/index.html and not accepting will cancel the Ambari Server setup and you must install the JDK and JCE files manually.
+Do you accept the Oracle Binary Code License Agreement [y/n] (y)? y
+Downloading JDK from http://public-repo-1.hortonworks.com/ARTIFACTS/jdk-8u112-linux-x64.tar.gz to /var/lib/ambari-server/resources/jdk-8u112-linux-x64.tar.gz
+jdk-8u112-linux-x64.tar.gz... 100% (174.7 MB of 174.7 MB)
+Successfully downloaded JDK distribution to /var/lib/ambari-server/resources/jdk-8u112-linux-x64.tar.gz
+Installing JDK to /usr/jdk64/
+Successfully installed JDK to /usr/jdk64/
+Downloading JCE Policy archive from http://public-repo-1.hortonworks.com/ARTIFACTS/jce_policy-8.zip to /var/lib/ambari-server/resources/jce_policy-8.zip
+
+Successfully downloaded JCE Policy archive to /var/lib/ambari-server/resources/jce_policy-8.zip
+Installing JCE policy...
+Check JDK version for Ambari Server...
+JDK version found: 8
+Minimum JDK version is 8 for Ambari. Skipping to setup different JDK for Ambari Server.
+Checking GPL software agreement...
+GPL License for LZO: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
+Enable Ambari Server to download and install GPL Licensed LZO packages [y/n] (n)? n
+Completing setup...
+Configuring database...
+Enter advanced database configuration [y/n] (n)? n
+Configuring database...
+Default properties detected. Using built-in database.
+Configuring ambari database...
+Checking PostgreSQL...
+Running initdb: This may take up to a minute.
+Initializing database ... OK
+
+
+About to start PostgreSQL
+Configuring local database...
+Configuring PostgreSQL...
+Restarting PostgreSQL
+Creating schema and user...
+done.
+Creating tables...
+done.
+Extracting system views...
+ambari-admin-2.7.3.0.139.jar
+....
+Ambari repo file contains latest json url http://public-repo-1.hortonworks.com/HDP/hdp_urlinfo.json, updating stacks repoinfos with it...
+Adjusting ambari-server permissions and ownership...
+Ambari Server 'setup' completed successfully.
+[root@master1 ~]#
+========================================================================================================================================================
+[root@master1 ~]# ambari-server start
+Using python  /usr/bin/python
+Starting ambari-server
+Ambari Server running with administrator privileges.
+Organizing resource files at /var/lib/ambari-server/resources...
+Ambari database consistency check started...
+Server PID at: /var/run/ambari-server/ambari-server.pid
+Server out at: /var/log/ambari-server/ambari-server.out
+Server log at: /var/log/ambari-server/ambari-server.log
+Waiting for server start..............................................
+Server started listening on 8080
+
+DB configs consistency check: no errors and warnings were found.
+Ambari Server 'start' completed successfully.
+[root@master1 ~]#
+========================================================================================================================================================
+
+
+ 

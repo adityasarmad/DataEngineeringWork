@@ -1,0 +1,48 @@
+to access local files from linux
+pig -x local 
+
+to access fles from hadoop
+pig -x Map-Reduce
+
+
+REGISTER /usr/hdp/current/pig-client/lib/piggybank.jar;
+REGISTER /opt/cloudera/parcels/CDH-5.16.2-1.cdh5.16.2.p0.8/lib/pig/piggybank.jar
+
+courses = LOAD '/home/2050B43/pig/reed.xml' USING org.apache.pig.piggybank.storage.XMLLoader('COURSE') as (x:chararray);
+
+
+
+
+records = FOREACH courses GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<COURSE>\\s*<REG_NUM>(.*)</REG_NUM>\\s*<SUBJ>(.*)</SUBJ>\\s*<CRSE>(.*)</CRSE>\\s*<SECT>(.*)</SECT>\\s*<TITLE>(.*)</TITLE>\\s*<UNITS>(.*)</UNITS>\\s*<INSTRUCTOR>(.*)</INSTRUCTOR>\\s*<DAYS>(.*)</DAYS>\\s*<START_TIME>(.*)</START_TIME>\\s*<END_TIME>(.*)</END_TIME>\\s*<BUILDING>(.*)</BUILDING>\\s*<ROOM>(.*)</ROOM>\\s*</COURSE>'));
+
+
+ coursesData = FOREACH records GENERATE (int)$0 AS register_number, (chararray)$1 AS subject,(int)$2 AS course, (chararray)$3 AS section, (chararray)$4 AS title, (float)$5 AS units, (chararray)$6 AS instructor, (chararray)$7 AS days, (chararray)$8 AS start_time, (chararray)$9 AS end_time,(chararray)$10 AS building, (chararray)$11 AS room;
+
+
+ course_group = GROUP coursesData by subject;
+ course_group_lim = LIMIT course_group 5;
+ dump course_group_lim;
+ describe course_group;
+ EXPLAIN course_group; 
+
+ courseCount = FOREACH course_group GENERATE group,COUNT(coursesData);
+
+
+
+ all_rec = GROUP coursesData ALL;
+ all_rec_count = FOREACH all_rec Generate COUNT(coursesData.register_number);
+ dump all_rec_count;
+
+
+
+
+ token = FOREACH coursesData generate title;
+ token_limit = LIMIT token 10;
+ dump token_limit;
+
+
+
+ token_ize = FOREACH coursesData generate TOKENIZE(title);
+ token_ize_lim = LIMIT token_ize 10;
+ dump token_ize_lim;
+
