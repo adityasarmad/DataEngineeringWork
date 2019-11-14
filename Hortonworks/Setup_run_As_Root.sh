@@ -1,11 +1,15 @@
+# !/bin/bash
+if [ $(id -u) -eq 0 ]; then echo " "; else  echo "Please run as root" ; exit 1 ; fi
 
 yum update -y
+if [ $? -gt 0 ] ; then echo "There is an error update ...."; fi
 sleep 10
 systemctl set-default multi-user.target
+if [ $? -gt 0 ] ; then echo "There is an error in systemctl multi-user.target ...."; fi
+
 sudo systemctl get-default
 sleep 10
 echo "vm.swappiness = 10" >> /etc/sysctl.conf
-echo "HOSTNAME=master1.hadoop.com" >> /etc/sysconfig/network
 echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag " >> /etc/rc.local
 echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled " >> /etc/rc.local
 echo umask 0022 >> /etc/profile
@@ -15,7 +19,7 @@ echo "==========================================================================
 sleep 10
 
 yum install wget ntp firewalld  -y
-
+if [ $? -gt 0 ] ; then echo "There is an error in installing wget ntp firewalld  ...."; fi
 systemctl enable ntpd
 systemctl start  ntpd
 systemctl status  ntpd
